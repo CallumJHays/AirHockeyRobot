@@ -20,5 +20,6 @@ The AI decision making algorithm must be designed to accept Pixy-like (explained
 - Where the puck currently is and what trajectory it is travelling in.
 - Where the walls currently are and the likely trajectory of the puck if bouncing off the wall.
 - Where the mallet (held by the robot arm) currently is, if it is in the right place and if it is moving at the intended speed to hit the puck at the intended angle and speed.
+
 <h2>Servo Control System</h2>
 Controls two servos using inverse kinematics to move the air-hockey mallet to the desired location as set by the AI. Inputs to this, received from the AI system are yet to be clarified
