@@ -10,7 +10,40 @@ To do this the project will be constructed of 3 main parts:
 
 The Raspberry Pi mounted on the robot will be rigged to auto-update and recompile from the master branch if any changes have been made since the last time the robot was tested. All development must be made on an external branch before pulling onto the master branch. 
 <h2>TODO</h2>
-1. Populate TODO list
+Arm Kinematics:
+        - Find the kinematic equations (should return 0, 1, or 2 solutions (servo1 val, servo2 val) for any given tool point x, y)
+        - Make an algorithm that, if given multiple solutions, finds the "closest" one (servo-wise)
+        - Make algorithm to determine time till we reach desired point
+       
+Vision:
+        - Train pixy
+        - Find the homography matrix (should be fixed for each camera/location pair)
+        - Set up our own camera and thresholds for the puck and the opponent's mallet
+        - Test position accuracy extensively, optimise lots
+       
+Puck Kinematics:
+        - Kalman filter the puck's position at any given moment
+        - Get velocity vectors, estimate paths (need to deal with walls too!)
+                - http://ieeexplore.ieee.org.ezp01.library.qut.edu.au/xpls/icp.jsp?arnumber=6491223
+                - http://bit.ly/1Ln3XTd
+                - http://bit.ly/1Ln3Xml
+       
+       
+Combining all this:
+        - First, make mallet follow puck.x. Should be a relatively lazy system, should still win most of the time
+        - Next, look into hitting the puck
+                - Much more complicated, because multiple variables involved.
+                - Must be able to:
+                        - get path of puck quickly
+                        - find where (and when) it intersects our toolspace
+                        - pick a point that we can reach at the same time the puck will
+                        - actually move and hit it
+                        - return to a base point
+                - and this is just for blindly hitting, aiming is harder
+        - Next, look into aiming the puck
+                - http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6119852
+                - http://ieeexplore.ieee.org.ezp01.library.qut.edu.au/xpls/icp.jsp?arnumber=7020736
+                - http://ieeexplore.ieee.org.ezp01.library.qut.edu.au/search/searchresult.jsp?newsearch=true&queryText=Air%20Hockey
 
 <h2>Computer Vision System</h2>
 Prototyping with the vision system will initially be completed using the CMUcam5 Pixy. Work done on the vision system using the Raspberry Pi Camera with OpenCV must therefore produce outputs in the same format for use by the AI. See [here](http://cmucam.org/projects/cmucam5/wiki/Hooking_up_Pixy_to_a_Microcontroller_like_an_Arduino) for information on how Pixy encodes it's object detection.
