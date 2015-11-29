@@ -2,9 +2,7 @@ import pygame, math, sys
 
 SCREEN_RESOLUTION = (750, 750)
 
-ua = input("Length of Upper Arm: ")
-la = input("Length of Lower Arm: ")
-LENGTHS = ua, la
+LENGTHS = 300, 350
 
 class Application:
     def __init__(self):
@@ -18,6 +16,8 @@ class Application:
     Starts the main loop.
     """
     def start(self):
+        pygame.init()
+        self.font = pygame.font.Font(None, 24)
         self.running = True
         self.initDisplay()
         self.loop()
@@ -34,7 +34,7 @@ class Application:
     """
     def initDisplay(self):
         self.surface = pygame.display.set_mode(SCREEN_RESOLUTION)
-
+        pygame.display.set_caption('Air Hockey Robot Simulation')
 
     """
     Main Loop
@@ -47,6 +47,7 @@ class Application:
 
             self.drawQuadrants()
             self.drawArm()
+            self.drawAngleValues()
 
             pygame.display.flip()                       #Draws display buffer to display
 
@@ -82,19 +83,12 @@ class Application:
         base = (0, 0)
         target = fromPygame(self.mousePos)
 
-        if self.ai.getDifference(base, target)[0] < 0 and self.ai.getDifference(base, target)[1]>0:
-            _invert = True
-        elif self.ai.getDifference(base, target)[0] > 0 and self.ai.getDifference(base, target)[1]<0:
-            _invert = True
-        else:
-            _invert = False
-
         """Gets angle to the midarm"""
-        globalBaseAngle = self.ai.getBaseAngle(target, i=_invert)
+        globalBaseAngle = self.ai.getBaseAngle(target)
 
 
         """Gets angle to the end arm"""
-        globalMidArmAngle = self.ai.getMidArmAngle(target, i=_invert)
+        globalMidArmAngle = self.ai.getMidArmAngle(target)
 
         """Deals with the coordinate mid arm"""
         midArm = self.polarToCartesian(self.ai.upperArmLength, globalBaseAngle)
@@ -115,12 +109,15 @@ class Application:
         p2 = self.mousePos
         pygame.draw.line(self.surface, (255, 255, 255), p1, p2, 3)
 
-
-
     def drawQuadrants(self):
         pygame.draw.line(self.surface, (255, 0, 0), (0, SCREEN_RESOLUTION[1]/2), (SCREEN_RESOLUTION[0], SCREEN_RESOLUTION[1]/2))
         pygame.draw.line(self.surface, (255, 0, 0), (SCREEN_RESOLUTION[0]/2, 0), (SCREEN_RESOLUTION[0]/2, SCREEN_RESOLUTION[1]))
 
+    def drawAngleValues(self):
+        baseAngleText = self.font.render("Base Angle: " + str(self.ai.getBaseAngle(self.mousePos)), True, (255,255,255))
+        baseAngleTextBox = baseAngleText.get_rect()
+        baseAngleTextBox.centerx = self.surface.get_rect().centerx
+        self.surface.blit(baseAngleText, baseAngleTextBox)
 
 
 class AirHockeyAI:
@@ -144,9 +141,9 @@ class AirHockeyAI:
     Returns the angle for the upper arm's servo.
     0 is defined as facing right
     """
-    def getBaseAngle(self, targetPos, i=False):
+    def getBaseAngle(self, targetPos):
         #Angle local to the triangle.
-        triangleAngle = self.calculateInverseKinematics(targetPos, invert=i)[1]
+        triangleAngle = self.calculateInverseKinematics(targetPos)[1]
         a = self.findAngle((0, 0), targetPos)
         return triangleAngle+a
 
@@ -166,10 +163,10 @@ class AirHockeyAI:
     Returns the angle for the lower arm's servo.
     0 is defined as right.
     """
-    def getMidArmAngle(self, targetPos, i=False):
-        return (self.getBaseAngle(targetPos, i=i)-180)+self.calculateInverseKinematics(targetPos, invert=i)[2]
+    def getMidArmAngle(self, targetPos):
+        return (self.getBaseAngle(targetPos)-180)+self.calculateInverseKinematics(targetPos)[2]
 
-    def calculateInverseKinematics(self, targetPos, invert=False):
+    def calculateInverseKinematics(self, targetPos):
         try:
             """
             L1, 2, and 3 correspond to the triangle lengths for the IK
@@ -192,14 +189,9 @@ class AirHockeyAI:
             #A1 = angle opposite L1
             #A2 = angle opposite L2; Base Angle
             #A3 = angle opposite L3; Angle between lower and upper arms
-            if invert:
-                a3 = -math.degrees(math.acos((l1**2 + l2**2 - l3**2)/(2*l1*l2)))
-                a1 = -math.degrees(math.acos((l2**2 + l3**2 - l1**2)/(2*l2*l3)))
-                a2 = -math.degrees(math.acos((l3**2 + l1**2 - l2**2)/(2*l3*l1)))
-            else:
-                a3 = math.degrees(math.acos((l1**2 + l2**2 - l3**2)/(2*l1*l2)))
-                a1 = math.degrees(math.acos((l2**2 + l3**2 - l1**2)/(2*l2*l3)))
-                a2 = math.degrees(math.acos((l3**2 + l1**2 - l2**2)/(2*l3*l1)))
+            a3 = -math.degrees(math.acos((l1**2 + l2**2 - l3**2)/(2*l1*l2)))
+            a1 = -math.degrees(math.acos((l2**2 + l3**2 - l1**2)/(2*l2*l3)))
+            a2 = -math.degrees(math.acos((l3**2 + l1**2 - l2**2)/(2*l3*l1)))
 
 
             #print(a1,a2,a3)
