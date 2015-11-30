@@ -46,7 +46,7 @@ class Application:
             self.handleEvents()                         #Handles events
 
             self.drawQuadrants()
-            self.drawArm()
+            self.drawArmAndMallet()
             self.drawAngleValues()
 
             pygame.display.flip()                       #Draws display buffer to display
@@ -78,26 +78,26 @@ class Application:
         y = length * math.sin(math.radians(angle))
         return(x, y)
 
-    def drawArm(self):
+    def drawArmAndMallet(self):
 
         base = (0, 0)
         target = fromPygame(self.mousePos)
 
         """Gets angle to the midarm"""
-        globalBaseAngle = self.ai.getBaseAngle(target)
-
+        self.globalBaseAngle = self.ai.getBaseAngle(target)
 
         """Gets angle to the end arm"""
-        globalMidArmAngle = self.ai.getMidArmAngle(target)
+        self.globalMidArmAngle = self.ai.getMidArmAngle(target)
 
         """Deals with the coordinate mid arm"""
-        midArm = self.polarToCartesian(self.ai.upperArmLength, globalBaseAngle)
+        midArm = self.polarToCartesian(self.ai.upperArmLength, self.globalBaseAngle)
 
         """ Deals with the coordinate for the end of the arm: essentially mathematical version of target"""
-        cart = self.polarToCartesian(self.ai.lowerArmLength, globalMidArmAngle)
+        cart = self.polarToCartesian(self.ai.lowerArmLength, self.globalMidArmAngle)
         endArm = midArm[0]+cart[0], midArm[1]+cart[1]
 
-        pygame.draw.line(self.surface, (0, 255, 0), toPygame(base), toPygame(midArm), 3)
+        pygame.draw.circle(self.surface, (255,0,0), (int(toPygame(endArm)[0]), int(toPygame(endArm)[1])), 20)
+        pygame.draw.line(self.surface, (0, 255, 255), toPygame(base), toPygame(midArm), 3)
         pygame.draw.line(self.surface, (0, 255, 0), toPygame(midArm), toPygame(endArm), 3)
         #pygame.draw.line(self.surface, (0, 0, 255), toPygame(target), toPygame(base), 3)
 
@@ -114,10 +114,19 @@ class Application:
         pygame.draw.line(self.surface, (255, 0, 0), (SCREEN_RESOLUTION[0]/2, 0), (SCREEN_RESOLUTION[0]/2, SCREEN_RESOLUTION[1]))
 
     def drawAngleValues(self):
-        baseAngleText = self.font.render("Base Angle: " + str(self.ai.getBaseAngle(self.mousePos)), True, (255,255,255))
+        baseAngle = self.globalBaseAngle
+        midArmAngle = self.globalMidArmAngle
+
+        baseAngleText = self.font.render("Base Servo Angle: " + str(baseAngle), True, (255,255,255))
         baseAngleTextBox = baseAngleText.get_rect()
         baseAngleTextBox.centerx = self.surface.get_rect().centerx
         self.surface.blit(baseAngleText, baseAngleTextBox)
+
+        midAngleText = self.font.render("Elbow Servo Angle: " + str(midArmAngle - baseAngle + 360), True, (255,255,255))
+        midAngleTextBox = midAngleText.get_rect()
+        midAngleTextBox.centerx = self.surface.get_rect().centerx
+        midAngleTextBox.centery += 30
+        self.surface.blit(midAngleText, midAngleTextBox)
 
 
 class AirHockeyAI:
