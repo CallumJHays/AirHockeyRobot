@@ -11,6 +11,8 @@ class Table(SimObject):
 
     def draw(self):
         self.surface.fill((255, 255, 255))
+        self.drawQuadrants()
+        return self.surface
 
     def drawQuadrants(self):
         pygame.draw.line(self.surface, (255, 0, 0), (0, constants.TABLE_SIZE[1]/2), (constants.TABLE_SIZE[0], constants.TABLE_SIZE[1]/2))

@@ -5,6 +5,7 @@ from threading import Thread
 from model.line import LineSegment
 from model.point import Point
 from model.circle import Circle
+from objects.table import Table
 from constants import *
 from utils import *
 
@@ -25,6 +26,8 @@ class Application:
         self.font = pygame.font.Font(None, 24)
         self.running = True
         self.initDisplay()
+
+        self.table = Table()
 
         self.consoleThread = Thread(target=self.startInteractiveShell)
         self.consoleThread.setDaemon(True)
@@ -80,21 +83,28 @@ class Application:
     """
     def loop(self):
         while self.running:
+            self.handleEvents()                   #Handles events
             self.surface.fill((0, 0, 0))          #Fills display with white
-            self.handleEvents()                         #Handles events
 
 
-            self.drawQuadrants()
-            self.drawArmAndMallet()
-            self.drawAngleValues()
+            #self.drawQuadrants()
+            #self.drawArmAndMallet()
+            #self.drawAngleValues()
 
             #self.c1.draw()
-            self.l1.draw()
-            self.l2.draw()
+            #self.l1.draw()
+            #self.l2.draw()
             #for p in self.c1.getLineIntersection(self.l1):
             #    p.draw()
 
-            self.l1.reflect(self.l2).draw()
+            self.table.tick()
+
+
+            surf = self.table.draw()
+            surf = pygame.transform.scale(surf, (int(surf.get_width()*SCALE), int(surf.get_height()*SCALE)))
+            self.surface.blit(surf, (BORDER_SIZE*SCALE, BORDER_SIZE*SCALE))
+
+            #self.l1.reflect(self.l2).draw()
 
             pygame.display.flip()                       #Draws display buffer to display
 

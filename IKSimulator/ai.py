@@ -1,6 +1,5 @@
 import math
-
-ARM_LENGTHS = 300, 350
+from constants import ARM_LENGTHS
 
 class AirHockeyAI:
     def __init__(self):
