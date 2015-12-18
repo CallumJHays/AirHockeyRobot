@@ -1,12 +1,13 @@
-import pygame, math, sys
+import pygame, math, sys, time
 from ai import AirHockeyAI
 from code import InteractiveConsole
 from threading import Thread
-from model.line import Line
+from model.line import LineSegment
 from model.point import Point
 from model.circle import Circle
+from constants import *
+from utils import *
 
-SCREEN_RESOLUTION = (750, 750)
 
 class Application:
     def __init__(self):
@@ -29,6 +30,7 @@ class Application:
         self.consoleThread.setDaemon(True)
         self.consoleThread.start()
 
+        time.sleep(0.1)
         self.loop()
 
     """
@@ -39,16 +41,20 @@ class Application:
         vars = globals()
         ai = self.ai
 
-        p1 = Point(0, 0)
-        p2 = Point(10, 10)
-        l1 = Line(p1, p2)
+        p1 = Point(-300, -300)
+        p2 = Point(300, 100 )
+        l1 = LineSegment(p1, p2, self)
+        self.l1 = l1
 
-        p1 = Point(1, 1)
-        p2 = Point(11, 11)
-        l2 = Line(p1, p2)
+        p1 = Point(-300, -100)
+        p2 = Point(300, 0)
+        l2 = LineSegment(p1, p2, self)
+        self.l2 = l2
 
-        p1 = Point(0, 0)
-        c1 = Circle(p1, 2)
+        p1 = Point(0, 0, self)
+        self.p1 = p1
+        c1 = Circle(p1, 100, self)
+        self.c1 = c1
 
         vars.update(locals())
         shell = InteractiveConsole(vars)
@@ -77,9 +83,18 @@ class Application:
             self.surface.fill((0, 0, 0))          #Fills display with white
             self.handleEvents()                         #Handles events
 
+
             self.drawQuadrants()
             self.drawArmAndMallet()
             self.drawAngleValues()
+
+            #self.c1.draw()
+            self.l1.draw()
+            self.l2.draw()
+            #for p in self.c1.getLineIntersection(self.l1):
+            #    p.draw()
+
+            self.l1.reflect(self.l2).draw()
 
             pygame.display.flip()                       #Draws display buffer to display
 
@@ -157,16 +172,8 @@ class Application:
         targetTextBox.centery += 60
         self.surface.blit(targetText, targetTextBox)
 
-
-
-"""
-Essentially makes the origin in the centre of the window, rather than top right.
-"""
-def toPygame(pos):
-    return pos[0]+SCREEN_RESOLUTION[0]/2, (-pos[1]+SCREEN_RESOLUTION[1]/2)
-
-def fromPygame(pos):
-    return pos[0]-SCREEN_RESOLUTION[0]/2, -(pos[1]-SCREEN_RESOLUTION[1]/2)
+    def toPygame(self, pos):
+        return toPygame(pos)
 
 """
 If this file was not imported, then start the application's code.

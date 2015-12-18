@@ -80,5 +80,4 @@ class AirHockeyAI:
 
             return (a1, a2, a3)
         except:
-            print("Invalid stuff.")
             return(60, 60, 60)
