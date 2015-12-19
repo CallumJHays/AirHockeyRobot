@@ -6,6 +6,7 @@ from model.line import LineSegment
 from model.point import Point
 from model.circle import Circle
 from objects.table import Table
+from model.rect import Rect
 from constants import *
 from utils import *
 
@@ -44,20 +45,10 @@ class Application:
         vars = globals()
         ai = self.ai
 
-        p1 = Point(-300, -300)
-        p2 = Point(300, 100 )
-        l1 = LineSegment(p1, p2, self)
-        self.l1 = l1
-
-        p1 = Point(-300, -100)
-        p2 = Point(300, 0)
-        l2 = LineSegment(p1, p2, self)
-        self.l2 = l2
-
-        p1 = Point(0, 0, self)
-        self.p1 = p1
-        c1 = Circle(p1, 100, self)
-        self.c1 = c1
+        self.rect1 = Rect(Point(0, 0), Point(100, 100))
+        self.rect2 = Rect(Point(50, 50), Point(150, 150))
+        rect1 = self.rect1
+        rect2 = self.rect2
 
         vars.update(locals())
         shell = InteractiveConsole(vars)
@@ -91,22 +82,15 @@ class Application:
             #self.drawArmAndMallet()
             #self.drawAngleValues()
 
-            #self.c1.draw()
-            #self.l1.draw()
-            #self.l2.draw()
-            #for p in self.c1.getLineIntersection(self.l1):
-            #    p.draw()
+            #self.rect1.draw(self.surface)
+            #self.rect2.draw(self.surface)
 
             self.table.tick()
 
-
-            surf = self.table.draw()
-            surf = pygame.transform.scale(surf, (int(surf.get_width()*SCALE), int(surf.get_height()*SCALE)))
+            surf = self.scaleSurface(self.table.draw())
             self.surface.blit(surf, (BORDER_SIZE*SCALE, BORDER_SIZE*SCALE))
 
-            #self.l1.reflect(self.l2).draw()
-
-            pygame.display.flip()                       #Draws display buffer to display
+            pygame.display.flip()                   #Draws display buffer to display
 
 
 
@@ -115,6 +99,11 @@ class Application:
         """
         pygame.quit()
         sys.exit(0)
+
+    def scaleSurface(self, surf):
+        surf = pygame.transform.scale(surf, (int(surf.get_width()*SCALE), int(surf.get_height()*SCALE)))
+        surf = pygame.transform.flip(surf, False, True)
+        return surf
 
     """
     Handles pygame events.
