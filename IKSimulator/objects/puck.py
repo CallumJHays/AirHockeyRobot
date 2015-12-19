@@ -34,7 +34,7 @@ class Puck:
 
     def draw(self, surf):
         lastPos = self.pos.x, self.pos.y
-        for y in range(1500, 100, -1):
+        for y in range(1500, 100, -20):
             traj = self.find_y(y), y
             pygame.draw.line(surf, (0, 0, 0), self.toPygame(lastPos), self.toPygame(traj), 10)
             lastPos = traj
