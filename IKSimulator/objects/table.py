@@ -3,6 +3,8 @@ import constants
 from objects.simobject import SimObject
 from objects.goal import Goal
 from objects.arm import Arm
+from objects.puck import Puck
+from model.point import Point
 
 class Table(SimObject):
     def __init__(self):
@@ -12,6 +14,8 @@ class Table(SimObject):
         self.topGoal.setColor((255, 100, 100))
         self.bottomGoal = Goal()
         self.bottomGoal.setColor((100, 100, 255))
+
+        self.puck = Puck()
 
         self.arm = Arm()
 
@@ -33,11 +37,16 @@ class Table(SimObject):
         bottomGoalPos = self.toPygame((-bottomGoalSurf.get_width()/2, 0))
         self.surface.blit(bottomGoalSurf, bottomGoalPos)
 
-        self.arm.mousePos = self.getMousePos()
+        #self.arm.mousePos = self.getMousePos()
 
         armSurf = self.arm.draw()
         armPos = self.toPygame((-armSurf.get_width()/2, 0))
         self.surface.blit(armSurf, armPos)
+
+        mPos = self.getMousePos()
+        diff = self.puck.pos.getDifference(Point(mPos[0], mPos[1]))
+        self.puck.vel = diff
+        self.puck.draw(self.surface)
 
         return self.surface
 
