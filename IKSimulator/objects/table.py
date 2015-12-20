@@ -37,7 +37,7 @@ class Table(SimObject):
         bottomGoalPos = self.toPygame((-bottomGoalSurf.get_width()/2, 0))
         self.surface.blit(bottomGoalSurf, bottomGoalPos)
 
-        #self.arm.mousePos = self.getMousePos()
+        self.arm.mousePos = self.puck.calculateTrajectory(200), 200#= self.getMousePos()
 
         armSurf = self.arm.draw()
         armPos = self.toPygame((-armSurf.get_width()/2, 0))
