@@ -8,11 +8,12 @@ using namespace std;
 
 void onMouse( int event, int x, int y, int, void* );
 Mat frameBGR;
+Mat frame;
 
-Mat cMat = (Mat_<double>(3,3) << 575.0, 0, 300.0, 0,
-    5000, 270, 0, 0, 1);
-Mat dMat = (Mat_<double>(5,1) << -0.75, -2.75, 0, 0,
-    8.0);
+Mat cMat = (Mat_<double>(3,3) << 6.7755787141193980e+02, 0, 3.1950000000000000e+02, 0,
+    6.7755787141193980e+02, 2.3950000000000000e+02, 0, 0, 1);
+Mat dMat = (Mat_<double>(5,1) << -9.6077790106132444e-01, -1.1475291579624882e+00, 0, 0,
+    6.8919587593787934e+00);
     
 Mat mapx;
 Mat mapy;
@@ -134,12 +135,9 @@ int cvChromaticityTest(){
 void onMouse( int event, int x, int y, int, void* ){
     if( event != CV_EVENT_LBUTTONDOWN )
             return;
-    cout << "onMouse called! @ " << x << ", " << y << endl;
     //Point pt = Point(x,y);
     //std::cout<<"x="<<pt.x<<"\t y="<<pt.y<<"\t value="<<frame.at<uchar>(x,y)<<"\n";
-    Vec3b colour = frameBGR.at<Vec3b>(Point(x, y));
-    cout << " mid function " << endl;
-    cout << "B" << to_string(colour.val[0]) << " G" << to_string(colour.val[1]) << " R" <<to_string(colour.val[2]) << endl;
-    cout << "onMouse event ended!" << endl;
+    Vec3b colour = frame.at<Vec3b>(Point(x, y));
+    cout << "B" << std::to_string(colour.val[0]) << " G" << std::to_string(colour.val[1]) << " R" <<std::to_string(colour.val[2]) << endl ;
 }
 

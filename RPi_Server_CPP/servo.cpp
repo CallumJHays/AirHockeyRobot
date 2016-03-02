@@ -2,7 +2,7 @@
 #include <iostream>
 
 class Servo{
-	static const int ELBOW_PIN = 1;
+	static const int ELBOW_PIN = 2;
 	static const int BASE_PIN = 0;
 	FILE * servoDev;
 	bool invert;
