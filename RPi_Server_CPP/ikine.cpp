@@ -2,57 +2,62 @@
 #include <iostream>
 #include <math.h>
 
-#define PI 3.1415926
-
 using namespace std;
 
 class Ikine {
-	double basePos = {50, 0};
+	static const short baseX = 50;
+	static const short baseY = 5;
 
 	Servo* baseServo;
-	const double upperArmLength = 23.0;
+	static const double upperArmLength = 22.75;
 
 	Servo* elbowServo;
-	const double lowerArmLength = 23.0;
+	static const double lowerArmLength = 24.05;
 
 public:
+	double toDeg(double rad){
+		return rad * 180 / M_PI;
+	}
+	double cosRule(double a, double b, double c){
+		return acos((b*b + c*c - a*a) / (2 * b * c));
+	}
+	bool moveTo(double x, double y){
+		cout << "Attempting to go to (" << x << ", " << y << ")" << endl;
+		x -= baseX;
+		y -= baseY;
+		double base2malletDist = sqrt(x * x + y * y);
+		if(base2malletDist > lowerArmLength + upperArmLength){
+			return false;
+		}
+		double base2malletRad = atan2(y, x);
+
+		double baseRad = cosRule(lowerArmLength, upperArmLength, base2malletDist);
+		double elbowRad = cosRule(base2malletDist, lowerArmLength, upperArmLength);
+
+		if(baseServo->set(toDeg(base2malletRad - baseRad)) && elbowServo->set(toDeg(elbowRad))){
+			cout << "Moving to (" << x << ", " << y << ")" << endl;
+		} else {
+			cout << "Servos cannot move to the location: (" << x << ", " << y << ")" << endl;
+		}
+		return true;
+	}
 	Ikine(){
-
+		baseServo = new Servo(1);
+		elbowServo = new Servo(0);
+		moveTo(0, 15);
 	}
-
-	double[] getDifference(double[] pos1, double[] pos2){
-		return [pos2[0] - pos1[0], pos2[1] - pos1[1]];
-	}
-
-	/*
-	Returns the distance between two points.
-	*/
-	double getDistance(double[] pos1, double[] pos2){
-		double[] diff = getDifference(pos1, pos2);
-		return math.sqrt(diff[0]^2+diff[1]^2);
-	}
-
-	double calculateInverseKinematics(){
-
-	}
-
-	double getBaseAngle(targetPos){
-		//double triangleAngle = calculateInverseKinematics(targetPos)[1];
-		//double a =
-	}
-
-	double toDegrees(double radians){
-		return radians * 180.0 / PI;
-	}
-
-	double toRadians(double degrees){
-		return (degrees / 180.0) * PI
-	}
-}
+};
 
 int main(){
-	Ikine* ik = new Ikine();
-	cout << ik->getDifference({1, 1}, {2, 2}) << endl;
+	cout << "Ikine test begin!" << endl;
+	Ikine* ikine = new Ikine();
+
+	while(true){
+		ikine->moveTo(50, 30);
+		cin.ignore();
+		ikine->moveTo(50, 35);
+		cin.ignore();
+	}
 
 	return 0;
 }
