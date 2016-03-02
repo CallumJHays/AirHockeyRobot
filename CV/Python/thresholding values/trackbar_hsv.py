@@ -1,8 +1,26 @@
 import cv2
 import numpy as np
+import time
+import picamera
+import picamera.array
+from fractions import Fraction
 
+# Calls pi camera module
+camera = picamera.PiCamera()
+camera.framerate = 90
+camera.resolution = (320, 240)
+camera.exposure_mode = 'sports'
+camera.awb_mode = 'off'
+camera.awb_gains = (Fraction(191, 128), Fraction(441, 256))
+camera.brightness = 75
+camera.contrast = 75
 
-cap = cv2.VideoCapture(0)
+stream = picamera.array.PiRGBArray(camera)
+
+time.sleep(2.25)
+
+# Kernel for Morphological transformations
+kernel = np.ones((3, 3), np.uint8)
 
 def nothing(x):
     pass
@@ -17,13 +35,27 @@ cv2.createTrackbar('h-low', 'result',0,179,nothing)
 cv2.createTrackbar('s-low', 'result',0,255,nothing)
 cv2.createTrackbar('v-low', 'result',0,255,nothing)
 
-cv2.createTrackbar('h-high', 'result',0,197,nothing)
-cv2.createTrackbar('s-high', 'result',0,197,nothing)
-cv2.createTrackbar('v-high', 'result',0,197,nothing)
+cv2.createTrackbar('h-high', 'result',179,179,nothing)
+cv2.createTrackbar('s-high', 'result',255,255,nothing)
+cv2.createTrackbar('v-high', 'result',255,255,nothing)
+
+# Defisheye parameters
+camera_matrix = np.array([[ 585.90603268, 0., 292.55539555 ], [ 0., 583.54677694, 263.94398364 ], [ 0., 0., 1., ]])
+distortion_coefficients =  np.array([-1.31618512,  1.57884866,  0.00767129, -0.00976971, -0.12370269])
 
 while(1):
+    stream.truncate(0)
+    camera.capture(stream, 'bgr', use_video_port=True)
+    frame = stream.array
 
-    _, frame = cap.read()
+    #ROI
+    frame = frame[40:200, 35:290]
+    # Defisheye
+    #h, w = frame.shape[:2]
+    #newcameramtx, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, distortion_coefficients, (w, h), 1, (w, h))
+    #dst = cv2.undistort(frame, camera_matrix, distortion_coefficients, None, newcameramtx)
+    #x,y,w,h = roi
+    #frame = dst[y:y+h, x:x+w]
 
     #converting to HSV
     hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
@@ -37,22 +69,23 @@ while(1):
     s_high = cv2.getTrackbarPos('s-high','result')
     v_high = cv2.getTrackbarPos('v-high','result')
 
-
     # Normal masking algorithm
     lower_blue = np.array([h_low,s_low,v_low])
     upper_blue = np.array([h_high,s_high,v_high])
 
     mask = cv2.inRange(hsv,lower_blue, upper_blue)
+    img_filtered = cv2.bitwise_and(frame,frame,mask = mask)
+    img_blur = cv2.GaussianBlur(img_filtered, (15,15), 0)
+    _ret, img_otsu = cv2.threshold(cv2.cvtColor(img_blur, cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    #img_eroded = cv2.erode(img_otsu, kernel, iterations=1)
+    #img_dilated = cv2.dilate(img_eroded, kernel, iterations=1)
 
-    result = cv2.bitwise_and(frame,frame,mask = mask)
-
-    cv2.imshow('result',result)
+    cv2.imshow('original', frame)
+    cv2.imshow('result', img_otsu)
 
     k = cv2.waitKey(5) & 0xFF
-    if k == 27:
+    if k == ord('q'):
         break
-
-cap.release()
 
 cv2.destroyAllWindows()
 
