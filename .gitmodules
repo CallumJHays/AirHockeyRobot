@@ -1,0 +1,3 @@
+[submodule "RPi_Server_CPP/blobtrack/opencvblobslib"]
+	path = RPi_Server_CPP/blobtrack/opencvblobslib
+	url = https://github.com/OpenCVBlobsLib/opencvblobslib
