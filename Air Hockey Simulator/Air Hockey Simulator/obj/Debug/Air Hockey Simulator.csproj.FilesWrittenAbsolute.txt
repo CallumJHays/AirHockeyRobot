@@ -1,0 +1,10 @@
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/obj/Debug/Air_Hockey_Simulator.AirHockeySimCtrl.resources
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/obj/Debug/Air_Hockey_Simulator.frmMain.resources
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/obj/Debug/Air_Hockey_Simulator.frmSim.resources
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/obj/Debug/Air_Hockey_Simulator.Properties.Resources.resources
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/bin/Debug/Air Hockey Simulator.exe.config
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/bin/Debug/Air Hockey Simulator.exe.mdb
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/bin/Debug/Air Hockey Simulator.exe
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/obj/Debug/Air Hockey Simulator.exe
+/home/callumjhays/AirHockeyRobot/Air Hockey Simulator/Air Hockey Simulator/obj/Debug/Air Hockey Simulator.exe.mdb

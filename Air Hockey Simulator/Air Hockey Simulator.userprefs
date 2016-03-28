@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="Air Hockey Simulator/Air Hockey Simulator.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Air Hockey Simulator/AirHockeySimCtrl.cs">
+    <Files>
+      <File FileName="Air Hockey Simulator/Program.cs" Line="1" Column="1" />
+      <File FileName="Air Hockey Simulator/frmSim.cs" Line="13" Column="9" />
+      <File FileName="Air Hockey Simulator/AirHockeySimCtrl.cs" Line="80" Column="50" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
