@@ -1,23 +1,10 @@
 import cv2
 import numpy as np
 import time
-import picamera
-import picamera.array
 from fractions import Fraction
 
-# Calls pi camera module
-camera = picamera.PiCamera()
-camera.framerate = 90
-camera.resolution = (320, 240)
-camera.exposure_mode = 'sports'
-camera.awb_mode = 'off'
-camera.awb_gains = (Fraction(191, 128), Fraction(441, 256))
-camera.brightness = 75
-camera.contrast = 75
-
-stream = picamera.array.PiRGBArray(camera)
-
-time.sleep(2.25)
+# Open camera capture device
+cap = cv2.VideoCapture(0)
 
 # Kernel for Morphological transformations
 kernel = np.ones((3, 3), np.uint8)
@@ -44,9 +31,7 @@ camera_matrix = np.array([[ 585.90603268, 0., 292.55539555 ], [ 0., 583.54677694
 distortion_coefficients =  np.array([-1.31618512,  1.57884866,  0.00767129, -0.00976971, -0.12370269])
 
 while(1):
-    stream.truncate(0)
-    camera.capture(stream, 'bgr', use_video_port=True)
-    frame = stream.array
+    ret, frame = cap.read()
 
     #ROI
     frame = frame[40:200, 35:290]
@@ -58,7 +43,7 @@ while(1):
     #frame = dst[y:y+h, x:x+w]
 
     #converting to HSV
-    hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # get info from track bar and appy to result
     h_low = cv2.getTrackbarPos('h-low','result')

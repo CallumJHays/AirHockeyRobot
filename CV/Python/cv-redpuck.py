@@ -8,10 +8,10 @@ import numpy as np
 cap = cv2.VideoCapture(0)
 
 # Set camera parameters
-cap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 360)
-cap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 240)
-cap.set(cv2.cv.CV_CAP_PROP_BRIGHTNESS, 0.2)
-cap.set(cv2.cv.CV_CAP_PROP_GAIN, 0.3)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 360)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.2)
+cap.set(cv2.CAP_PROP_GAIN, 0.3)
 
 """
 #print('Frame width: ' + str(cap.get(cv2.CAP_PROP_FRAME_WIDTH)))
@@ -42,8 +42,8 @@ while True:
 
     # define range of blue color in BGR
     # B:85-125	 G:120-160   R:80-120
-    lower = np.array([72,85,166])
-    upper = np.array([154,126,191])
+    lower = np.array([0, 0, 55])
+    upper = np.array([19, 0, 91])
 
     # HSV
     # Increase V value if can't detect green puck
@@ -77,6 +77,7 @@ while True:
         cv2.circle(frame, (x+w/2, y+h/2), w/2, (0, 0, 255), 2)
 
     except:
+        x, y, w, h = 0, 0, 0, 0
         pass
 
     # Kalman predictions
