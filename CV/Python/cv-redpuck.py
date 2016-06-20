@@ -8,10 +8,10 @@ import numpy as np
 cap = cv2.VideoCapture(0)
 
 # Set camera parameters
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 360)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
-cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.2)
-cap.set(cv2.CAP_PROP_GAIN, 0.3)
+cap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 360)
+cap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 240)
+cap.set(cv2.cv.CV_CAP_PROP_BRIGHTNESS, 0.2)
+cap.set(cv2.cv.CV_CAP_PROP_GAIN, 0.3)
 
 """
 #print('Frame width: ' + str(cap.get(cv2.CAP_PROP_FRAME_WIDTH)))
